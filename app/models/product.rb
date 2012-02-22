@@ -1,0 +1,14 @@
+class Product < ActiveRecord::Base
+    paginates_per 10
+	validates_presence_of :title, :description
+	validates_numericality_of :price
+	validates_format_of :image_url,
+		:with => %r{\.(gif|jpg|png)$}i,
+		:message => "must be a URL for a GIF, JPG, or PNG image",
+		:allow_blank => true
+
+	protected
+	def validate
+		errors.add(:price, "Should be at least 0.01" ) if price.nil? || price < 0.01
+	end
+end

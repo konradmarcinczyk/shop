@@ -1,0 +1,36 @@
+<h1>Catalog</h1>
+
+<table class="catalog">
+<% for product in @products %>
+  <tr>
+    <td>
+        <div class="image">
+            <%= link_to (image_tag product.image_url), product %>
+        </div>
+    </td>
+    <td>
+        <div class="title">
+            <%= link_to product.title, product %>
+        </div>
+        <div class="description">
+            <%=h product.description %>
+        </div>
+        <div class="links">
+            <% if session[:login] == 1 %>
+                <%= link_to 'Edit', edit_product_path(product) %> |
+                <%= link_to 'Destroy', product, :confirm => 'Are you sure?', :method => :delete %>
+            <% else %>
+                <%= button_to "Add to Cart", :controller => :cart, :action => :add, :id => product %>
+            <% end %>
+        </div>
+        <div class="price">
+            <%= number_to_currency(product.price, :unit => "&pound;") %>
+        </div>
+    </td>
+  </tr>
+<% end %>
+</table>
+
+<% if session[:login] == 1 %>
+    <p><%= link_to 'New product', new_product_path %></p>
+<% end %>

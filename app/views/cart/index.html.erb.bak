@@ -1,0 +1,52 @@
+<h1>Your Cart</h1>
+
+<% if @cart.empty? %>
+    <p>Your Cart is empty.</p>
+<% end %>
+
+<% total = 0 %>
+	
+<table class="cart">
+    <tr>
+        <div class="legend">Picture</div>
+        <div class="legend">Product</div>
+        <div class="legend">Price</div>
+        <div class="legend">Qty</div>
+        <div class="legend">Total</div>
+        <div class="legend">Options</div>
+    </tr>
+	
+<% @cart.each do | id, quantity | %>
+  <% unless quantity == 0 %>
+    <% product = Product.find_by_id(id) %>
+    <tr>
+        <div>
+            <div class="image">
+                <%= link_to (image_tag product.image_url), product %>
+            </div>
+        </div>
+        <div class="title"><%= link_to product.title, product %></div>
+        <div class="price"><%= number_to_currency(product.price) %></div>
+        <div class="quantity"><%= quantity %><br /></div>
+        <div class="price"><%= number_to_currency(quantity * product.price, :unit => "L") %></div>
+        <div class="delete"><%= button_to "Delete", :controller => :cart, :action => :delete, :id => product %></div>
+    </tr>
+    <% total += quantity * product.price %>
+  <% else %>
+  <% end %>
+<% end %>
+
+    <tr>
+        <div colspan="4">
+            <div class="total">Total:</div>
+        </div>
+        <div>
+            <div class="price"><%= number_to_currency(total, :unit => "L") %></div>
+        </div>
+    </tr>
+</table>
+
+<p>
+    <%= link_to 'Proceed to Checkout', :action => :checkout %> |
+    <%= link_to 'Continue Shopping', :controller => :products %>
+</p>
